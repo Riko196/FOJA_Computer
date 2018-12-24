@@ -1,0 +1,17 @@
+.grammar {
+  background-color: gray;
+}
+
+.grammar-sidebar {
+  top: 45px;
+  bottom: 0;
+  position: flex;
+  padding-bottom: 2rem;
+  padding-top: 2rem;
+  height: 100%;
+}
+
+.grammar-main {
+  margin: 2rem;
+  border: 1px solid red;
+}

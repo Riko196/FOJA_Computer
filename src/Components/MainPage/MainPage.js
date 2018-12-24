@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import turingac from "./images/turingac.mp4";
 import logo_uk from "./images/logo_uk.png";
-import Navigation from "../../Navigation";
 
 import "./MainPage.css";
+import Navigation from "../../Navigation";
 
 class MainPage extends Component {
   render() {
@@ -15,8 +15,7 @@ class MainPage extends Component {
           Your browser does not support the video tag.
         </video>
         <div className="mainpage-container-title">
-          <h1>FOJA</h1>
-          <h2>computer</h2>
+          <img src={logo_uk} alt="logo_uk" />
         </div>
         <div className="mainpage-container-footer">
           <h2>

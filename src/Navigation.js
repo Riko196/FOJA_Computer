@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from "react";
 import { NavLink, withRouter } from "react-router-dom";
 import { NavItem, Nav } from "reactstrap";
@@ -15,18 +14,18 @@ class Navigation extends Component {
           </NavLink>
         </NavItem>
         <NavItem className="navitem">
-          <NavLink to="/Gramatiky" className="nav-link">
-            Gramatiky
+          <NavLink to="/grammarpage" className="nav-link">
+            Grammars
           </NavLink>
         </NavItem>
         <NavItem className="navitem">
-          <NavLink to="/Automaty" className="nav-link">
-            Automaty
+          <NavLink to="/automatapage" className="nav-link">
+            Automata
           </NavLink>
         </NavItem>
         <NavItem className="navitem">
-          <NavLink to="/Turingove_stroje" className="nav-link">
-            Turingove stroje
+          <NavLink to="/turing_machinepage" className="nav-link">
+            Turing machine
           </NavLink>
         </NavItem>
       </Nav>
