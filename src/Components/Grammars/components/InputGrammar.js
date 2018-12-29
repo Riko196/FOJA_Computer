@@ -1,14 +1,40 @@
 import React, { Component } from "react";
-
 import "./InputGrammar.css";
 
 class InputGrammar extends Component {
-  state = {
-    nonterminals: "",
-    terminals: "",
-    rules: "",
-    start: "",
-    inputMessage: ""
+  constructor(props) {
+    super(props);
+    this.state = {
+      nonterminals: "",
+      terminals: "",
+      rules: "",
+      start: "",
+      inputMessage: "",
+      data: null
+    };
+  }
+
+  componentDidMount() {
+    this.callBackendAPI()
+      .then(res => {
+        this.setState({ data: res });
+        console.log(this.state.data);
+      })
+      .catch(err => console.log(err));
+  }
+  callBackendAPI = async () => {
+    const response = await fetch("http://localhost:8080/express_backend", {
+      method: "GET",
+      headers: {
+        Accept: "application/json"
+      }
+    });
+    console.log(response);
+    const body = await response.text();
+    if (response.status !== 200) {
+      throw Error(body.message);
+    }
+    return body;
   };
 
   handleNonterminalsChange = event => {
@@ -122,6 +148,7 @@ class InputGrammar extends Component {
           break;
       }
     }
+
     console.log(nonterminalsSet);
     console.log(terminalsSet);
     console.log(start);
