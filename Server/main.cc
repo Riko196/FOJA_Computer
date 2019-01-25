@@ -13,10 +13,16 @@ using v8::Object;
 using v8::String;
 using v8::Value;
 
-void Method(const FunctionCallbackInfo<Value> &args)
+void Execute(const FunctionCallbackInfo<Value> &args)
 {
   Isolate *isolate = args.GetIsolate();
-  Grammar *grammar = new Grammar();
+
+  set<char> nonterminals;
+  set<char> terminals;
+  char start = 'A';
+  set<pair<string, string>> rules;
+
+  Grammar *grammar = new Grammar(nonterminals, terminals, start, rules);
   string response = grammar->hello();
 
   args.GetReturnValue().Set(String::NewFromUtf8(
@@ -26,7 +32,7 @@ void Method(const FunctionCallbackInfo<Value> &args)
 
 void Initialize(Local<Object> exports)
 {
-  NODE_SET_METHOD(exports, "hello", Method);
+  NODE_SET_METHOD(exports, "execute", Execute);
 }
 
 NODE_MODULE(NODE_GYP_MODULE_NAME, Initialize)
