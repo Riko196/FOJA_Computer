@@ -1,11 +1,48 @@
 #include "Grammar.h"
 
-Grammar::Grammar(set<char> nonterminals, set<char> terminals, char start, set<pair<string, string>> rules)
+Grammar::Grammar(string stringGrammar)
 {
-    this->nonterminals = nonterminals;
-    this->terminals = terminals;
-    this->start = start;
-    this->rules = rules;
+    stringstream stringGrammarStream(stringGrammar);
+    string segment;
+    vector<std::string> grammar;
+
+    while (getline(stringGrammarStream, segment, '|'))
+    {
+        grammar.push_back(segment);
+    }
+
+    stringstream nonterminalsStream(grammar[0]);
+    while (getline(nonterminalsStream, segment, ','))
+    {
+        this->nonterminals.insert(segment[0]);
+    }
+
+    stringstream terminalsStream(grammar[1]);
+    while (getline(terminalsStream, segment, ','))
+    {
+        this->terminals.insert(segment[0]);
+    }
+
+    this->start = grammar[2][0];
+
+    stringstream rulesStream(grammar[3]);
+    pair<string, string> para;
+    para.first = "";
+    para.second = "";
+    while (getline(rulesStream, segment, ','))
+    {
+        if (para.first == "")
+        {
+            para.first = segment;
+        }
+        else
+        {
+            para.second = segment;
+            this->rules.insert(para);
+            para.first = "";
+            para.second = "";
+        }
+    }
 }
 
 void Grammar::toReducedNormalForm()
@@ -194,7 +231,8 @@ bool Grammar::isTerminalWord(string word)
 int Grammar::minimum(queue<string> &queue)
 {
     int minimum = 0;
-    for (unsigned int i = 0; i < queue.size(); i++)
+    int size = queue.size();
+    for (unsigned int i = 0; i < size; i++)
     {
         string s = queue.front();
         queue.pop();
@@ -238,11 +276,22 @@ bool Grammar::isEquivalent(Grammar *grammar)
             }
         }
 
-        string thisWord = thisQueue.front();
-        thisQueue.pop();
+        string thisWord = "";
+        if (!thisQueue.empty())
+        {
+            thisWord = thisQueue.front();
+            thisQueue.pop();
+        }
+
         maxMemory -= thisWord.length();
-        string grammarWord = grammarQueue.front();
-        grammarQueue.pop();
+
+        string grammarWord = "";
+        if (!grammarQueue.empty())
+        {
+            grammarWord = grammarQueue.front();
+            grammarQueue.pop();
+        }
+
         maxMemory -= grammarWord.length();
 
         for (unsigned int j = 0; j < thisWord.length(); j++)
@@ -293,6 +342,30 @@ bool Grammar::isEquivalent(Grammar *grammar)
     }
 
     return true;
+}
+
+string Grammar::grammarToString()
+{
+    string stringGrammar = "";
+    for (auto nonterminal : this->nonterminals)
+    {
+        stringGrammar += string(1, nonterminal) + ",";
+    }
+    stringGrammar.pop_back();
+    stringGrammar += "|";
+    for (auto terminal : this->terminals)
+    {
+        stringGrammar += string(1, terminal) + ",";
+    }
+    stringGrammar.pop_back();
+    stringGrammar += "|" + string(1, this->start);
+    stringGrammar += "|";
+    for (auto para : this->rules)
+    {
+        stringGrammar += para.first + "," + para.second + ",";
+    }
+    stringGrammar.pop_back();
+    return stringGrammar;
 }
 
 string Grammar::hello() const

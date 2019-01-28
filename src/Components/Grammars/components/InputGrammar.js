@@ -1,4 +1,7 @@
 import React, { Component } from "react";
+import ReducedFormButton from "./Buttons/ReducedFormButton";
+import EpsilonFreeButton from "./Buttons/EpsilonFreeButton";
+
 import "./InputGrammar.css";
 
 class InputGrammar extends Component {
@@ -9,33 +12,9 @@ class InputGrammar extends Component {
       terminals: "",
       rules: "",
       start: "",
-      inputMessage: "",
-      data: null
+      inputMessage: ""
     };
   }
-
-  componentDidMount() {
-    this.callBackendAPI()
-      .then(res => {
-        this.setState({ data: res });
-        console.log(this.state.data);
-      })
-      .catch(err => console.log(err));
-  }
-  callBackendAPI = async () => {
-    const response = await fetch("http://localhost:8080/express_backend", {
-      method: "GET",
-      headers: {
-        Accept: "application/json"
-      }
-    });
-    console.log(response);
-    const body = await response.text();
-    if (response.status !== 200) {
-      throw Error(body.message);
-    }
-    return body;
-  };
 
   handleNonterminalsChange = event => {
     this.setState({ nonterminals: event.target.value });
@@ -69,7 +48,7 @@ class InputGrammar extends Component {
 
   badRuleWord = (word, nonterminalsSet, terminalsSet) => {
     for (let letter of word) {
-      if (!nonterminalsSet.has(letter) && !terminalsSet.has(letter))
+      if (!nonterminalsSet.includes(letter) && !terminalsSet.includes(letter))
         return true;
     }
     return false;
@@ -80,6 +59,7 @@ class InputGrammar extends Component {
   };
 
   readInput = () => {
+    console.log(this.props);
     this.handleInputMessageChange("");
 
     if (
@@ -96,25 +76,29 @@ class InputGrammar extends Component {
     const start = this.state.start;
     const rules = this.state.rules.split(/['->', '\n']/);
 
-    const nonterminalsSet = new Set();
+    const nonterminalsSet = [];
     for (let letter of nonterminals) {
       if (this.badLetterProblemNonterminals(letter)) {
         this.handleInputMessageChange("Bad nonterminals!");
         return;
       }
-      nonterminalsSet.add(letter);
+      nonterminalsSet.push(letter);
     }
 
-    const terminalsSet = new Set();
+    const terminalsSet = [];
     for (let letter of terminals) {
       if (this.badLetterProblemTerminals(letter)) {
         this.handleInputMessageChange("Bad terminals!");
         return;
       }
-      terminalsSet.add(letter);
+      terminalsSet.push(letter);
     }
 
-    const rulesSet = new Set();
+    if (this.state.start === "") {
+      this.handleInputMessageChange("Starting nonterminal can not be empty!");
+      return;
+    }
+    const rulesSet = [];
 
     let nonterminal;
     for (let i = 0; i < rules.length; i += 1) {
@@ -122,7 +106,7 @@ class InputGrammar extends Component {
         case 0:
           if (
             this.badLetterProblemNonterminals(rules[i]) ||
-            !nonterminalsSet.has(rules[i])
+            !nonterminalsSet.includes(rules[i])
           ) {
             this.handleInputMessageChange("Bad left part of the rule!");
             return;
@@ -141,7 +125,7 @@ class InputGrammar extends Component {
               this.handleInputMessageChange("Bad right part of the rule!");
               return;
             }
-            rulesSet.add([nonterminal, word]);
+            rulesSet.push([nonterminal, word]);
           }
           break;
         default:
@@ -149,16 +133,21 @@ class InputGrammar extends Component {
       }
     }
 
+    this.props.setGrammar({
+      nonterminalsSet,
+      terminalsSet,
+      start,
+      rulesSet
+    });
+
     console.log(nonterminalsSet);
     console.log(terminalsSet);
     console.log(start);
     console.log(rulesSet);
+    console.log(this.props);
   };
 
   render() {
-    const nonterminals = this.state.nonterminals
-      .split(",")
-      .map(letter => <option value={letter}>{letter}</option>);
     return (
       <form onSubmit={this.readInput}>
         <h3>
@@ -169,18 +158,22 @@ class InputGrammar extends Component {
             name="nonterminals"
             onChange={this.handleNonterminalsChange}
           />
-          {" }"}
+          {" },"}
           <br /> T = {"{ "}
           <input
             type="text"
             name="terminals"
             onChange={this.handleTerminalsChange}
           />
-          {" }"}
-          <br /> S = {"{ "}
+          {" },"}
+          <br /> S =
           <select value={this.state.start} onChange={this.handleStartChange}>
-            {nonterminals}
+            <option key="">Select start...</option>
+            {this.state.nonterminals.split(",").map(letter => (
+              <option key={letter}>{letter}</option>
+            ))}
           </select>
+          {","}
           <br /> P = {"{ "}
           <textarea
             type="text"
@@ -191,6 +184,20 @@ class InputGrammar extends Component {
         </h3>
         <p>{"}"}</p>
         <input type="button" onClick={this.readInput} value="Enter" />
+        <br />
+        {this.props.grammar != null && (
+          <ReducedFormButton
+            grammar={this.props.grammar}
+            setGrammar={this.props.setGrammar}
+          />
+        )}
+        <br />
+        {this.props.grammar != null && (
+          <EpsilonFreeButton
+            grammar={this.props.grammar}
+            setGrammar={this.props.setGrammar}
+          />
+        )}
         {this.state.inputMessage !== "" && <h3>{this.state.inputMessage}</h3>}
       </form>
     );

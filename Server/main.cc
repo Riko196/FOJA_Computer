@@ -17,17 +17,55 @@ void Execute(const FunctionCallbackInfo<Value> &args)
 {
   Isolate *isolate = args.GetIsolate();
 
-  set<char> nonterminals;
-  set<char> terminals;
-  char start = 'A';
-  set<pair<string, string>> rules;
+  if (args.Length() == 2)
+  {
+    String::Utf8Value str(isolate, args[0]);
+    string grammarString(*str);
 
-  Grammar *grammar = new Grammar(nonterminals, terminals, start, rules);
-  string response = grammar->hello();
+    String::Utf8Value req(isolate, args[1]);
+    string request(*req);
 
-  args.GetReturnValue().Set(String::NewFromUtf8(
-                                isolate, response.c_str(), NewStringType::kNormal)
-                                .ToLocalChecked());
+    Grammar *grammar = new Grammar(grammarString);
+
+    if (request == "reducedNormalForm")
+      grammar->toReducedNormalForm();
+    else if (request == "epsilonFreeForm")
+      grammar->toEpsilonFreeForm();
+
+    string result = grammar->grammarToString();
+
+    delete grammar;
+    args.GetReturnValue().Set(String::NewFromUtf8(isolate, result.c_str()));
+    return;
+  }
+  else if (args.Length() == 3)
+  {
+    String::Utf8Value str1(isolate, args[0]);
+    string grammarString1(*str1);
+    String::Utf8Value str2(isolate, args[1]);
+    string grammarString2(*str2);
+    Grammar *grammar1 = new Grammar(grammarString1);
+    Grammar *grammar2 = new Grammar(grammarString2);
+
+    bool isEquivalent = grammar1->isEquivalent(grammar2);
+
+    delete grammar1;
+    delete grammar2;
+    if (isEquivalent)
+      args.GetReturnValue().Set(String::NewFromUtf8(isolate, "true"));
+    else
+      args.GetReturnValue().Set(String::NewFromUtf8(isolate, "false"));
+    return;
+  }
+  else
+  {
+    args.GetReturnValue().Set(String::NewFromUtf8(
+                                  isolate, "Wrong inputs", NewStringType::kNormal)
+                                  .ToLocalChecked());
+    return;
+  }
+
+  args.GetReturnValue().Set(String::NewFromUtf8(isolate, "Wrong inputs"));
 }
 
 void Initialize(Local<Object> exports)
