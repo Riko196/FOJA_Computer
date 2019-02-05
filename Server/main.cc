@@ -47,14 +47,11 @@ void Execute(const FunctionCallbackInfo<Value> &args)
     Grammar *grammar1 = new Grammar(grammarString1);
     Grammar *grammar2 = new Grammar(grammarString2);
 
-    bool isEquivalent = grammar1->isEquivalent(grammar2);
+    string isEquivalent = grammar1->isEquivalent(grammar2);
 
     delete grammar1;
     delete grammar2;
-    if (isEquivalent)
-      args.GetReturnValue().Set(String::NewFromUtf8(isolate, "true"));
-    else
-      args.GetReturnValue().Set(String::NewFromUtf8(isolate, "false"));
+    args.GetReturnValue().Set(String::NewFromUtf8(isolate, isEquivalent.c_str()));
     return;
   }
   else
@@ -64,8 +61,6 @@ void Execute(const FunctionCallbackInfo<Value> &args)
                                   .ToLocalChecked());
     return;
   }
-
-  args.GetReturnValue().Set(String::NewFromUtf8(isolate, "Wrong inputs"));
 }
 
 void Initialize(Local<Object> exports)

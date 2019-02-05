@@ -1,4 +1,6 @@
 #include "Grammar.h"
+const string epsilon = "";
+const string substitutedEpsilon = "*";
 
 Grammar::Grammar(string stringGrammar)
 {
@@ -31,13 +33,15 @@ Grammar::Grammar(string stringGrammar)
     para.second = "";
     while (getline(rulesStream, segment, ','))
     {
-        if (para.first == "")
+        if (para.first == epsilon)
         {
             para.first = segment;
         }
         else
         {
             para.second = segment;
+            if (para.second == substitutedEpsilon)
+                para.second = epsilon;
             this->rules.insert(para);
             para.first = "";
             para.second = "";
@@ -220,37 +224,64 @@ void Grammar::toEpsilonFreeForm()
             this->rules.erase(para);
 }
 
-bool Grammar::isTerminalWord(string word)
+int Grammar::countOfTerminals(string word)
 {
+    int count = 0;
     for (unsigned int i = 0; i < word.length(); i++)
-        if ((((int)word[i]) < 97) || (((int)word[i]) > 122))
-            return false;
-    return true;
+        if ((((int)word[i]) >= 97) && (((int)word[i]) <= 122))
+            count++;
+    return count;
 }
 
-int Grammar::minimum(queue<string> &queue)
+int Grammar::minimum(queue<pair<string, int>> &queue)
 {
     int minimum = 0;
     int size = queue.size();
     for (unsigned int i = 0; i < size; i++)
     {
-        string s = queue.front();
+        pair<string, int> para = queue.front();
         queue.pop();
-        if (minimum == 0 || minimum > s.length())
-            minimum = s.length();
-        queue.push(s);
+        if (i == 0)
+            minimum = para.second;
+        else if (minimum > para.second)
+            minimum = para.second;
+        queue.push(para);
     }
-    return minimum - 1;
+    return minimum;
 }
 
-bool Grammar::isEquivalent(Grammar *grammar)
+int Grammar::minimum(set<string> words)
+{
+    int minimum = 0, i = 0;
+    for (auto word : words)
+    {
+        if (i == 0)
+        {
+            minimum = word.length();
+            i++;
+        }
+        else if (minimum > word.length())
+            minimum = word.length();
+    }
+    return minimum;
+}
+
+string Grammar::isEquivalent(Grammar *grammar)
 {
     int maxMemory = 0;
-    queue<string> thisQueue, grammarQueue;
+    int reachedSize = 0;
+    queue<pair<string, int>> thisQueue, grammarQueue;
     set<string> thisWords, grammarWords;
+    pair<string, int> start;
 
-    thisQueue.push(string(1, this->start));
-    grammarQueue.push(string(1, grammar->start));
+    start.first = string(1, this->start);
+    start.second = 0;
+    thisQueue.push(start);
+
+    start.first = string(1, grammar->start);
+    start.second = 0;
+    grammarQueue.push(start);
+
     maxMemory += 2;
 
     this->toReducedNormalForm();
@@ -260,88 +291,93 @@ bool Grammar::isEquivalent(Grammar *grammar)
     {
         if (i % 1000 == 0)
         {
-            int thisMinimum = this->minimum(thisQueue);
-            int grammarMinimum = grammar->minimum(grammarQueue);
+            int thisMinimum = thisQueue.size() == 0 ? this->minimum(thisWords) : this->minimum(thisQueue);
+            int grammarMinimum = grammarQueue.size() == 0 ? this->minimum(grammarWords) : this->minimum(grammarQueue);
 
+            reachedSize = max(reachedSize, min(thisMinimum, grammarMinimum));
             for (auto word : thisWords)
             {
-                if ((word.length() <= min(thisMinimum, grammarMinimum)) && (grammarWords.count(word) == 0))
-                    return false;
+                if ((word.length() < min(thisMinimum, grammarMinimum)) && (grammarWords.count(word) == 0))
+                    return word == "" ? "Epsilon|0" : word + "|0";
             }
 
             for (auto word : grammarWords)
             {
-                if ((word.length() <= min(thisMinimum, grammarMinimum)) && (thisWords.count(word) == 0))
-                    return false;
+                if ((word.length() < min(thisMinimum, grammarMinimum)) && (thisWords.count(word) == 0))
+                    return word == "" ? "Epsilon|0" : word + "|0";
             }
         }
 
-        string thisWord = "";
+        pair<string, int> thisWord;
         if (!thisQueue.empty())
         {
             thisWord = thisQueue.front();
             thisQueue.pop();
         }
 
-        maxMemory -= thisWord.length();
+        maxMemory -= thisWord.first.length();
 
-        string grammarWord = "";
+        pair<string, int> grammarWord;
         if (!grammarQueue.empty())
         {
             grammarWord = grammarQueue.front();
             grammarQueue.pop();
         }
 
-        maxMemory -= grammarWord.length();
+        maxMemory -= grammarWord.first.length();
 
-        for (unsigned int j = 0; j < thisWord.length(); j++)
+        for (unsigned int j = 0; j < thisWord.first.length(); j++)
         {
-            if ((int)thisWord[j] > 90)
+            if ((int)thisWord.first[j] > 90)
                 continue;
             for (auto para : this->rules)
             {
-                if (para.first == string(1, thisWord[j]))
+                if (para.first == string(1, thisWord.first[j]))
                 {
-                    string newString = thisWord;
-                    newString.erase(j, 1);
-                    newString.insert(j, para.second);
-                    if (this->isTerminalWord(newString))
-                        thisWords.insert(newString);
+                    pair<string, int> newPair = thisWord;
+                    newPair.first.erase(j, 1);
+                    newPair.first.insert(j, para.second);
+                    newPair.second += this->countOfTerminals(para.second);
+
+                    if (newPair.second == newPair.first.length())
+                        thisWords.insert(newPair.first);
                     else
-                        thisQueue.push(newString);
-                    if (maxMemory + newString.length() > 50000000)
-                        return true;
+                        thisQueue.push(newPair);
+                    if (maxMemory + newPair.first.length() > 50000000)
+                        return to_string(reachedSize) + "|1";
                     else
-                        maxMemory += newString.length();
+                        maxMemory += newPair.first.length();
                 }
             }
         }
 
-        for (unsigned int j = 0; j < grammarWord.length(); j++)
+        for (unsigned int j = 0; j < grammarWord.first.length(); j++)
         {
-            if ((int)grammarWord[j] > 90)
+            if ((int)grammarWord.first[j] > 90)
                 continue;
             for (auto para : grammar->rules)
             {
-                if (para.first == string(1, grammarWord[j]))
+                if (para.first == string(1, grammarWord.first[j]))
                 {
-                    string newString = grammarWord;
-                    newString.erase(j, 1);
-                    newString.insert(j, para.second);
-                    if (this->isTerminalWord(newString))
-                        grammarWords.insert(newString);
+                    pair<string, int> newPair = grammarWord;
+                    newPair.first.erase(j, 1);
+                    newPair.first.insert(j, para.second);
+                    newPair.second += grammar->countOfTerminals(para.second);
+
+                    if (newPair.second == newPair.first.length())
+                        grammarWords.insert(newPair.first);
                     else
-                        grammarQueue.push(newString);
-                    if (maxMemory + newString.length() > 50000000)
-                        return true;
+                        grammarQueue.push(newPair);
+                    if (maxMemory + newPair.first.length() > 50000000)
+                        return to_string(reachedSize) + "|1";
                     else
-                        maxMemory += newString.length();
+                        maxMemory += newPair.first.length();
                 }
             }
         }
     }
 
-    return true;
+    return to_string(reachedSize) + "|1";
 }
 
 string Grammar::grammarToString()
@@ -362,7 +398,11 @@ string Grammar::grammarToString()
     stringGrammar += "|";
     for (auto para : this->rules)
     {
-        stringGrammar += para.first + "," + para.second + ",";
+        stringGrammar += para.first + ",";
+        if (para.second == substitutedEpsilon)
+            stringGrammar += ",";
+        else
+            stringGrammar += para.second + ",";
     }
     stringGrammar.pop_back();
     return stringGrammar;

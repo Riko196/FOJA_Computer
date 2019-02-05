@@ -4,7 +4,7 @@ import Latex from "react-latex";
 class Legend extends Component {
   render() {
     return (
-      <h3>
+      <h3 className="legend">
         Please, use format: <br />N = {"{"}
         A, B, C, ... {"}"}
         <br />T = {"{"}

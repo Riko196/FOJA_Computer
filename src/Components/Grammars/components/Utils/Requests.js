@@ -30,7 +30,6 @@ export const callBackendAPIEquivalence = async (
       }
     }
   );
-
   const body = await response.text();
   if (response.status !== 200) {
     throw Error(body.message);

@@ -11,15 +11,16 @@ protected:
   set<char> terminals;
   char start;
   set<pair<string, string>> rules;
-  bool isTerminalWord(string word);
-  int minimum(queue<string> &queue);
+  int minimum(queue<pair<string, int>> &queue);
+  int minimum(set<string> words);
+  int countOfTerminals(string word);
 
 public:
   Grammar(string stringGrammar);
   string hello() const;
   void toReducedNormalForm();
   void toEpsilonFreeForm();
-  bool isEquivalent(Grammar *grammar);
+  string isEquivalent(Grammar *grammar);
   string grammarToString();
 };
 #endif

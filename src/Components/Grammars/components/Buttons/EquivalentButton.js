@@ -11,16 +11,19 @@ class EquivalentButton extends Component {
       grammarString2,
       "equivalence"
     ).then(res => {
-      if (res === "true") {
-        this.props.setEquivalence(true);
-      } else {
-        this.props.setEquivalence(false);
-      }
+      this.props.setEquivalencyAnswer(res);
     });
   };
 
   render() {
-    return <input type="button" onClick={this.execute} value={"Equivalence"} />;
+    return (
+      <input
+        type="button"
+        id="eq"
+        onClick={this.execute}
+        value={"Equivalence"}
+      />
+    );
   }
 }
 

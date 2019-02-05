@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import { epsilon } from "./Utils/Constants";
 import "./GrammarWriter.css";
 
 class GrammarWriter extends Component {
@@ -28,13 +28,19 @@ class GrammarWriter extends Component {
       rulesString += rules[i][0] + "->";
       for (let j = 0; j < rules.length; j += 1) {
         if (rules[j][0] === rules[i][0]) {
-          rulesString += rules[j][1] + "|";
+          if (rules[j][1] === epsilon) {
+            rulesString += "Epsilon|";
+          } else {
+            rulesString += rules[j][1] + "|";
+          }
         }
       }
       rulesString = rulesString.slice(0, -1);
-      rulesString += "\n";
+      rulesString += " , ";
       usedNonterminals.add(rules[i][0]);
     }
+    rulesString =
+      rulesString.length !== 0 ? rulesString.slice(0, -3) : rulesString;
     return rulesString;
   };
 
@@ -56,8 +62,8 @@ class GrammarWriter extends Component {
               <br /> P = {"{ "}
               {this.writeRules(this.props.grammar.rulesSet)}
               {" }"}
+              {"}"}
             </h3>
-            {"}"}
           </div>
         )}
       </div>

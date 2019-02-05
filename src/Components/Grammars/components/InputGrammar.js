@@ -150,38 +150,59 @@ class InputGrammar extends Component {
   render() {
     return (
       <form onSubmit={this.readInput}>
-        <h3>
-          G = {"{"}
-          <br /> N = {"{ "}
+        <p>G = {"{"}</p>
+        <div className="first">
+          <label htmlFor="nonterminals">N = {"{ "}</label>
+        </div>
+        <div className="second">
           <input
             type="text"
+            id="nonterminals"
             name="nonterminals"
             onChange={this.handleNonterminalsChange}
           />
           {" },"}
-          <br /> T = {"{ "}
+        </div>
+        <div className="first">
+          <label htmlFor="terminals">T = {"{ "}</label>
+        </div>
+        <div className="second">
           <input
             type="text"
+            id="terminals"
             name="terminals"
             onChange={this.handleTerminalsChange}
           />
           {" },"}
-          <br /> S =
-          <select value={this.state.start} onChange={this.handleStartChange}>
+        </div>
+        <div className="first">
+          <label htmlFor="select">S =</label>
+        </div>
+        <div className="second">
+          <select
+            id="select"
+            value={this.state.start}
+            onChange={this.handleStartChange}
+          >
             <option key="">Select start...</option>
             {this.state.nonterminals.split(",").map(letter => (
               <option key={letter}>{letter}</option>
             ))}
           </select>
           {","}
-          <br /> P = {"{ "}
+        </div>
+        <div className="first">
+          <label htmlFor="rules">P = {"{ "}</label>
+        </div>
+        <div className="second">
           <textarea
             type="text"
+            id="rules"
             name="rules"
             onChange={this.handleRulesChange}
           />
           {" }"}
-        </h3>
+        </div>
         <p>{"}"}</p>
         <input type="button" onClick={this.readInput} value="Enter" />
         <br />

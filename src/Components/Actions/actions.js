@@ -8,7 +8,7 @@ export const setGrammar2 = grammar2 => ({
   payload: grammar2
 });
 
-export const setEquivalence = value => ({
-  type: "Set equivalence",
-  payload: value
+export const setEquivalencyAnswer = equivalencyAnswer => ({
+  type: "Set answer for equivalency",
+  payload: equivalencyAnswer
 });

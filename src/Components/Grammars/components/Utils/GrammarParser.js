@@ -1,3 +1,5 @@
+import { epsilon, substitutedEpsilon } from "./Constants";
+
 export const stringToGrammar = stringGrammar => {
   let grammar = stringGrammar.split("|");
   let nonterminalsSet = [];
@@ -26,7 +28,11 @@ export const stringToGrammar = stringGrammar => {
   let rulesSetArray = grammar[3].split(",");
 
   for (let i = 0; i < rulesSetArray.length; i += 2) {
-    rulesSet.push([rulesSetArray[i], rulesSetArray[i + 1]]);
+    if (rulesSetArray[i + 1] === substitutedEpsilon) {
+      rulesSet.push([rulesSetArray[i], epsilon]);
+    } else {
+      rulesSet.push([rulesSetArray[i], rulesSetArray[i + 1]]);
+    }
   }
   return { nonterminalsSet, terminalsSet, start, rulesSet };
 };
@@ -48,7 +54,12 @@ export const grammarToString = grammar => {
   }
   stringGrammar += "|" + grammar.start + "|";
   for (let i = 0; i < grammar.rulesSet.length; i += 1) {
-    stringGrammar += grammar.rulesSet[i][0] + "," + grammar.rulesSet[i][1];
+    stringGrammar += grammar.rulesSet[i][0] + ",";
+    if (grammar.rulesSet[i][1] === epsilon) {
+      stringGrammar += substitutedEpsilon;
+    } else {
+      stringGrammar += grammar.rulesSet[i][1];
+    }
     if (i !== grammar.rulesSet.length - 1) {
       stringGrammar += ",";
     }
