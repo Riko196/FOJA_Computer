@@ -1,1 +1,0 @@
-cmd_Release/obj.target/server.node := g++ -shared -pthread -rdynamic -m64  -Wl,-soname=server.node -o Release/obj.target/server.node -Wl,--start-group Release/obj.target/server/main.o Release/obj.target/server/Grammar.o -Wl,--end-group 

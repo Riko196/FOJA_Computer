@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import { Route } from "react-router-dom";
 import { Switch } from "react-router";
 import MainPage from "./Components/MainPage/MainPage";
-import GrammarPage from "./Components/Grammars/GrammarPage";
-import Navigation from "./Navigation";
+import GrammarForms from "./Components/Grammars/components/GrammarForms/GrammarForms";
+import SyntaxAnalyzer from "./Components/Grammars/SyntaxAnalyzer/SyntaxAnalyzer";
+import Navigation from "./Components/Navigation/Navigation";
 
 import "./App.css";
 class App extends Component {
@@ -13,7 +14,11 @@ class App extends Component {
         <Route path="/:something" component={Navigation} />
         <Route exact path="/" component={MainPage} />
         <Switch>
-          <Route path="/grammarpage" component={GrammarPage} />
+          <Route path="/grammarpage/grammar-forms" component={GrammarForms} />
+          <Route
+            path="/grammarpage/syntax-analyzer"
+            component={SyntaxAnalyzer}
+          />
         </Switch>
       </div>
     );

@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import turingac from "./images/turingac.mp4";
 import logo_uk from "./images/logo_uk.png";
+import Navigation from "../Navigation/Navigation";
 
 import "./MainPage.css";
-import Navigation from "../../Navigation";
 
 class MainPage extends Component {
   render() {

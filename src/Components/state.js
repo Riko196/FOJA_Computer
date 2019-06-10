@@ -1,7 +1,9 @@
-const getInitialState = () => ({
+export const initialState = {
   grammar1: null,
   grammar2: null,
-  equivalencyAnswer: { equivalency: null, answer: null }
-});
-
-export default getInitialState;
+  equivalencyAnswer: null,
+  precedentialRelation: null,
+  wordForAnalyzation: null,
+  analyzationOfWord: null,
+  grammarForAnalyzation: null
+};
