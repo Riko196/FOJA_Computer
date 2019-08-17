@@ -19,7 +19,8 @@
     "reactstrap": "^6.5.0",
     "recompose": "^0.30.0",
     "redux": "^4.0.1",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "webpack-dev-server": "^3.8.0"
   },
   "scripts": {
     "start": "react-scripts start",
