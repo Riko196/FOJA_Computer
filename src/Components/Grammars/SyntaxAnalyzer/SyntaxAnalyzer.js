@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Legend from "../components/Legend";
-import GrammarWriter from "../components/GrammarWriter";
 import RelationPrinter from "./RelationPrinter";
 import SyntaxAnimation from "./SyntaxAnimation";
 import InputSyntaxAnalyzer from "./InputSyntaxAnalyzer";
