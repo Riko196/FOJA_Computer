@@ -25,7 +25,6 @@
 .syntax-analyzer-sidebar form {
   color: black;
   margin-bottom: 2%;
-  
 }
 
 body {
@@ -46,7 +45,7 @@ h1 {
   margin-right: -50%;
 }
 
-.word-for-analyzation {
+.word-for-analysis {
   margin: 10px;
   padding: 5px;
 }

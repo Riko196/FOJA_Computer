@@ -147,7 +147,7 @@ class InputSyntaxAnalyzer extends Component {
   render() {
     return (
       <form onSubmit={this.readInput}>
-        <h2>Grammar for analyzation</h2>
+        <h2>Grammar to analyze</h2>
         <p>G = {"{"}</p>
         <div className="first">
           <label htmlFor="nonterminals">N = {"{ "}</label>
@@ -183,8 +183,8 @@ class InputSyntaxAnalyzer extends Component {
             onChange={this.handleStartChange}
           >
             <option key="">Select start...</option>
-            {this.state.nonterminals.split(",").map(letter => (
-              <option key={letter}>{letter}</option>
+            {this.state.nonterminals.split(",").map((letter, key) => (
+              <option key={key}>{letter}</option>
             ))}
           </select>
           {","}
@@ -210,7 +210,7 @@ class InputSyntaxAnalyzer extends Component {
 
 export default connect(
   state => ({
-    grammarForAnalyzation: state.grammarForAnalyzation,
+    grammarForAnalysis: state.grammarForAnalysis,
     precedentialRelation: state.precedentialRelation
   }),
   { isPrecedential }

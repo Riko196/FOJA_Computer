@@ -1,7 +1,7 @@
 import apiRequest from "./apiRequest";
 import { stringToGrammar } from "../Grammars/components/Utils/GrammarParser";
 import { stringToPrecedentialRelation } from "../Grammars/components/Utils/PrecedentialRelationParser";
-import { strintgToSyntaxAnalyzation } from "../Grammars/components/Utils/SyntaxAnalyzationParser";
+import { strintgToSyntaxAnalysis } from "../Grammars/components/Utils/SyntaxAnalysisParser";
 
 export const setGrammar1 = grammar1 => ({
   type: "Set grammar1",
@@ -19,11 +19,11 @@ export const setGrammar2 = grammar2 => ({
   }
 });
 
-export const setGrammarForAnalyzation = grammarForAnalyzation => ({
-  type: "Set grammar for analyzation",
-  payload: grammarForAnalyzation,
-  reducer: (state, grammarForAnalyzationPayload) => {
-    return { ...state, grammarForAnalyzation: grammarForAnalyzationPayload };
+export const setGrammarForAnalysis = grammarForAnalysis => ({
+  type: "Set grammar for Analysis",
+  payload: grammarForAnalysis,
+  reducer: (state, grammarForAnalysisPayload) => {
+    return { ...state, grammarForAnalysis: grammarForAnalysisPayload };
   }
 });
 
@@ -35,19 +35,19 @@ export const setPrecedentialRelation = precedentialRelation => ({
   }
 });
 
-export const setAnalyzationOfWord = analyzationOfWord => ({
-  type: "Set analyzation of word",
-  payload: analyzationOfWord,
-  reducer: (state, analyzationOfWordPayload) => {
-    return { ...state, analyzationOfWord: analyzationOfWordPayload };
+export const setAnalysisOfWord = analysisOfWord => ({
+  type: "Set analysis of word",
+  payload: analysisOfWord,
+  reducer: (state, analysisOfWordPayload) => {
+    return { ...state, analysisOfWord: analysisOfWordPayload };
   }
 });
 
-export const setWordForAnalyzation = wordForAnalyzation => ({
-  type: "Set word for analyzation",
-  payload: wordForAnalyzation,
-  reducer: (state, wordForAnalyzationPayload) => {
-    return { ...state, wordForAnalyzation: wordForAnalyzationPayload };
+export const setWordForAnalysis = wordForAnalysis => ({
+  type: "Set word for Analysis",
+  payload: wordForAnalysis,
+  reducer: (state, wordForAnalysisPayload) => {
+    return { ...state, wordForAnalysis: wordForAnalysisPayload };
   }
 });
 export const setEquivalencyAnswer = equivalencyAnswer => ({
@@ -128,7 +128,7 @@ export const isPrecedential = stringGrammar => dispatch => {
     .then(result => {
       const splitedResult = result.split("#");
       dispatch(
-        setGrammarForAnalyzation({
+        setGrammarForAnalysis({
           grammar: stringToGrammar(stringGrammar),
           isPrecedential: splitedResult[0] === "0" ? false : true
         })
@@ -146,20 +146,20 @@ export const isPrecedential = stringGrammar => dispatch => {
     });
 };
 
-export const getWordSyntaxAnalyzation = (grammar, word) => dispatch => {
+export const getWordSyntaxAnalysis = (grammar, word) => dispatch => {
   const data = {
     grammar: grammar,
     word: word
   };
 
-  return apiRequest(`grammarRequest/getWordSyntaxAnalyzation`, {
+  return apiRequest(`grammarRequest/getWordSyntaxAnalysis`, {
     method: "POST",
     body: data
   })
     .then(stringCommands => {
-      const commands = strintgToSyntaxAnalyzation(stringCommands);
-      dispatch(setAnalyzationOfWord(commands));
-      dispatch(setWordForAnalyzation(word));
+      const commands = strintgToSyntaxAnalysis(stringCommands);
+      dispatch(setAnalysisOfWord(commands));
+      dispatch(setWordForAnalysis(word));
     })
     .catch(e => {
       throw e;

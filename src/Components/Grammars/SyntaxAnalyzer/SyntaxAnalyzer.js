@@ -6,22 +6,21 @@ import InputSyntaxAnalyzer from "./InputSyntaxAnalyzer";
 import { grammarToString } from "../components/Utils/GrammarParser";
 import { connect } from "react-redux";
 import { epsilon } from "../components/Utils/Constants";
-import { getWordSyntaxAnalyzation } from "../../Actions/actions";
+import { getWordSyntaxAnalysis } from "../../Actions/actions";
 
 import "./SyntaxAnalyzer.css";
 
 class SyntaxAnalyzer extends Component {
   constructor(props) {
     super(props);
-    this.wordForAnalyzation = React.createRef();
+    this.wordForAnalysis = React.createRef();
   }
 
   nonsenseWord = word => {
     for (let i = 0; i < word.length; i += 1) {
       if (
-        this.props.grammarForAnalyzation.grammar.terminalsSet.includes(
-          word[i]
-        ) === false
+        this.props.grammarForAnalysis.grammar.terminalsSet.includes(word[i]) ===
+        false
       )
         return true;
     }
@@ -29,11 +28,11 @@ class SyntaxAnalyzer extends Component {
   };
 
   analyzeWord = () => {
-    const word = this.wordForAnalyzation.current.value;
+    const word = this.wordForAnalysis.current.value;
     if (this.nonsenseWord(word) === true || word === epsilon) return;
 
-    this.props.getWordSyntaxAnalyzation(
-      grammarToString(this.props.grammarForAnalyzation.grammar),
+    this.props.getWordSyntaxAnalysis(
+      grammarToString(this.props.grammarForAnalysis.grammar),
       word
     );
   };
@@ -45,14 +44,14 @@ class SyntaxAnalyzer extends Component {
         <div className="syntax-analyzer-sidebar">
           <InputSyntaxAnalyzer />
           {this.props.precedentialRelation !== null && <RelationPrinter />}
-          {this.props.grammarForAnalyzation !== null &&
-            this.props.grammarForAnalyzation.isPrecedential === true && (
-              <div className="analyzation-word">
-                <h1>Word for analyzation:</h1>
+          {this.props.grammarForAnalysis !== null &&
+            this.props.grammarForAnalysis.isPrecedential === true && (
+              <div className="analysis-word">
+                <h1>Word to analyze:</h1>
                 <input
                   type="text"
-                  className="word-for-analyzation"
-                  ref={this.wordForAnalyzation}
+                  className="word-for-analysis"
+                  ref={this.wordForAnalysis}
                 />
                 <input
                   type="button"
@@ -61,11 +60,11 @@ class SyntaxAnalyzer extends Component {
                 />
               </div>
             )}
-          {this.props.grammarForAnalyzation !== null &&
-            this.props.grammarForAnalyzation.isPrecedential !== true && (
+          {this.props.grammarForAnalysis !== null &&
+            this.props.grammarForAnalysis.isPrecedential !== true && (
               <p>Grammar is not simple precedential.</p>
             )}
-          {this.props.analyzationOfWord !== null && <SyntaxAnimation />}
+          {this.props.analysisOfWord !== null && <SyntaxAnimation />}
         </div>
 
         <Legend />
@@ -76,10 +75,10 @@ class SyntaxAnalyzer extends Component {
 
 export default connect(
   state => ({
-    grammarForAnalyzation: state.grammarForAnalyzation,
+    grammarForAnalysis: state.grammarForAnalysis,
     precedentialRelation: state.precedentialRelation,
-    analyzationOfWord: state.analyzationOfWord,
-    wordForAnalyzation: state.wordForAnalyzation
+    analysisOfWord: state.analysisOfWord,
+    wordForAnalysis: state.wordForAnalysis
   }),
-  { getWordSyntaxAnalyzation }
+  { getWordSyntaxAnalysis }
 )(SyntaxAnalyzer);

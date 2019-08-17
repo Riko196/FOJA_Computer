@@ -101,7 +101,7 @@ void Execute(const FunctionCallbackInfo<Value> &args)
 
     args.GetReturnValue().Set(String::NewFromUtf8(isolate, result.c_str()));
   }
-  else if (function == "getWordSyntaxAnalyzation")
+  else if (function == "getWordSyntaxAnalysis")
   {
     String::Utf8Value str1(isolate, args[1]);
     string grammarString(*str1);
@@ -111,12 +111,12 @@ void Execute(const FunctionCallbackInfo<Value> &args)
     string word(*str2);
 
     SyntaxAnalyzer *syntaxAnalyzer = new SyntaxAnalyzer(grammar);
-    string syntaxAnalyzation = syntaxAnalyzer->getShiftAndReduceString(syntaxAnalyzer->shiftAndReduce(word));
+    string syntaxAnalysis = syntaxAnalyzer->getShiftAndReduceString(syntaxAnalyzer->shiftAndReduce(word));
 
     delete grammar;
     delete syntaxAnalyzer;
 
-    args.GetReturnValue().Set(String::NewFromUtf8(isolate, syntaxAnalyzation.c_str()));
+    args.GetReturnValue().Set(String::NewFromUtf8(isolate, syntaxAnalysis.c_str()));
   }
   else
   {

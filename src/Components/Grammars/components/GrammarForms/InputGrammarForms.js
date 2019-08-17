@@ -185,8 +185,8 @@ class InputGrammarForms extends Component {
             onChange={this.handleStartChange}
           >
             <option key="">Select start...</option>
-            {this.state.nonterminals.split(",").map(letter => (
-              <option key={letter}>{letter}</option>
+            {this.state.nonterminals.split(",").map((letter, key) => (
+              <option key={key}>{letter}</option>
             ))}
           </select>
           {","}

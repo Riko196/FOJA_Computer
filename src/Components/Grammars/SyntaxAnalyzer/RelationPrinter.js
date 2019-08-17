@@ -11,29 +11,35 @@ class RelationPrinter extends Component {
           <div className="precedential-relation-sidebar">
             <h1>Precedential relation for Grammar:</h1>
             <p className="relation-paragraph">Less relation:</p>
-            {this.props.precedentialRelation.lessRelation.map(relation => (
-              <p className="relation-paragraph">
-                {"("} {relation.first}
-                {" , "} {relation.second}
-                {")"}
-              </p>
-            ))}
+            {this.props.precedentialRelation.lessRelation.map(
+              (relation, key) => (
+                <p key={key} className="relation-paragraph">
+                  {"("} {relation.first}
+                  {" , "} {relation.second}
+                  {")"}
+                </p>
+              )
+            )}
             <p className="relation-paragraph">Equals relation:</p>
-            {this.props.precedentialRelation.equalsRelation.map(relation => (
-              <p className="relation-paragraph">
-                {"("} {relation.first}
-                {" , "} {relation.second}
-                {")"}
-              </p>
-            ))}
+            {this.props.precedentialRelation.equalsRelation.map(
+              (relation, key) => (
+                <p key={key} className="relation-paragraph">
+                  {"("} {relation.first}
+                  {" , "} {relation.second}
+                  {")"}
+                </p>
+              )
+            )}
             <p className="relation-paragraph">More relation:</p>
-            {this.props.precedentialRelation.moreRelation.map(relation => (
-              <p className="relation-paragraph">
-                {"("} {relation.first}
-                {" , "} {relation.second}
-                {")"}
-              </p>
-            ))}
+            {this.props.precedentialRelation.moreRelation.map(
+              (relation, key) => (
+                <p key={key} className="relation-paragraph">
+                  {"("} {relation.first}
+                  {" , "} {relation.second}
+                  {")"}
+                </p>
+              )
+            )}
           </div>
         )}
       </div>

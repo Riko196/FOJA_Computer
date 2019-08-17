@@ -60,7 +60,7 @@ bool SyntaxAnalyzer::reduce(stack<char> &stackOfChars, PrecedentialRelation *pre
                 stackOfChars.push(reducedWord[i]);
             commands.push_back("REDUCE " + rule.second + " -> " + rule.first +
                                " Current word: " + this->getCurrentWord(stackOfChars, word, pointerOnCurrentChar));
-            //reduce is executed so we cant stop and reject syntax analyzation
+            //reduce is executed so we cant stop and reject syntax analysis
             stop = false;
             break;
         }

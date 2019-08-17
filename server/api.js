@@ -26,11 +26,11 @@ router.post("/grammarRequest/isPrecedential", (req, res) => {
   res.send(cecko.execute("isPrecedential", grammar));
 });
 
-router.post("/grammarRequest/getWordSyntaxAnalyzation", (req, res) => {
+router.post("/grammarRequest/getWordSyntaxAnalysis", (req, res) => {
   const { grammar } = req.body;
   const { word } = req.body;
 
-  res.send(cecko.execute("getWordSyntaxAnalyzation", grammar, word));
+  res.send(cecko.execute("getWordSyntaxAnalysis", grammar, word));
 });
 
 module.exports = {

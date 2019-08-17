@@ -7,9 +7,11 @@ class SyntaxAnimation extends Component {
   render() {
     return (
       <div className="syntax-animation">
-        <h1>Syntax analyzation for word "{this.props.wordForAnalyzation}":</h1>
-        {this.props.analyzationOfWord.map(command => (
-          <p className="command-paragraph">{command}</p>
+        <h1>Syntax analysis for word "{this.props.wordForAnalysis}":</h1>
+        {this.props.analysisOfWord.map((command, key) => (
+          <p key={key} className="command-paragraph">
+            {command}
+          </p>
         ))}
       </div>
     );
@@ -17,6 +19,6 @@ class SyntaxAnimation extends Component {
 }
 
 export default connect(state => ({
-  analyzationOfWord: state.analyzationOfWord,
-  wordForAnalyzation: state.wordForAnalyzation
+  analysisOfWord: state.analysisOfWord,
+  wordForAnalysis: state.wordForAnalysis
 }))(SyntaxAnimation);

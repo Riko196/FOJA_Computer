@@ -3,7 +3,7 @@ export const initialState = {
   grammar2: null,
   equivalencyAnswer: null,
   precedentialRelation: null,
-  wordForAnalyzation: null,
-  analyzationOfWord: null,
-  grammarForAnalyzation: null
+  wordForAnalysis: null,
+  analysisOfWord: null,
+  grammarForAnalysis: null
 };
