@@ -7,7 +7,7 @@
 /coverage
 
 # production
-Server/algorithms_c++/build
+server/algorithms_c++/build
 
 # misc
 .DS_Store
